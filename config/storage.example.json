@@ -1,0 +1,9 @@
+{
+  "backend": "r2",
+  "endpoint": "https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com",
+  "bucket": "YOUR_BUCKET_NAME",
+  "access_key_id": "YOUR_ACCESS_KEY_ID",
+  "secret_access_key": "YOUR_SECRET_ACCESS_KEY",
+  "prefix": "xboard",
+  "url_ttl": 3600
+}

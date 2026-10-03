@@ -1,0 +1,270 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* Dark mode is driven by a `.dark` class, matching the Watermelon UI registry. */
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+ * Design tokens copied verbatim from the Watermelon UI `agndex-dashboard`
+ * registry entry (registry.watermelon.sh/r/agndex-dashboard.json).
+ * Scoped to `.agndex-dashboard` so they cannot leak into host chrome.
+ * ------------------------------------------------------------------------- */
+.agndex-dashboard,
+body:has(.agndex-dashboard) [data-slot='sidebar'][data-mobile='true'],
+body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'],
+body:has(.agndex-dashboard) [data-slot='sheet-content'],
+body:has(.agndex-dashboard) [data-slot='dialog-content'],
+body:has(.agndex-dashboard) [data-slot='select-content'],
+body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(0.97 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --card-hover: oklch(0.94 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.68 0.17 336.255);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.574 0.232 29.36);
+  --info: oklch(0.591 0.249 293.89);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --input-addon-foreground: oklch(0.777 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.68 0.17 336.255);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.94 0 0);
+  --sidebar-accent-foreground: oklch(0.145 0 0);
+  --sidebar-border: oklch(0.9 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-muted: oklch(0.556 0 0);
+  --sidebar-muted-foreground: oklch(0.45 0 0);
+  --sidebar-badge: oklch(0.93 0 0);
+}
+
+.agndex-dashboard.dark,
+.dark .agndex-dashboard,
+.dark body:has(.agndex-dashboard) [data-slot='sidebar'][data-mobile='true'],
+.dark body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'],
+.dark body:has(.agndex-dashboard) [data-slot='sheet-content'],
+.dark body:has(.agndex-dashboard) [data-slot='dialog-content'],
+.dark body:has(.agndex-dashboard) [data-slot='select-content'],
+.dark body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
+  --background: oklch(0.244 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.281 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --card-hover: oklch(0.325 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.711 0.165 336.255);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.574 0.232 29.36);
+  --info: oklch(0.591 0.249 293.89);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --input-addon-foreground: oklch(0.777 0 0);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.173 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.711 0.165 336.255);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.325 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-muted: oklch(0.535 0 0);
+  --sidebar-muted-foreground: oklch(0.725 0 0);
+  --sidebar-badge: oklch(0.244 0 0);
+}
+
+/* Map the raw tokens onto Tailwind's theme so utilities like `bg-card`,
+ * `text-muted-foreground` and `border-sidebar-border` resolve. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-hover: var(--card-hover);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-addon-foreground: var(--input-addon-foreground);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-muted-foreground: var(--sidebar-muted-foreground);
+  --color-sidebar-badge: var(--sidebar-badge);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family:
+      ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Extra utilities shipped with the agndex-dashboard design system.
+ * ------------------------------------------------------------------------- */
+.text-xxs {
+  font-size: 0.625rem;
+}
+.text-xsm {
+  font-size: 0.8125rem;
+}
+.text-smd {
+  font-size: 0.9375rem;
+}
+.text-info {
+  color: var(--info);
+}
+.bg-info\/10 {
+  background-color: color-mix(in oklab, var(--info) 10%, transparent);
+}
+
+/* Registry root rule from the agndex-dashboard design system:
+   the dashboard surface must establish its own background AND foreground,
+   otherwise text without an explicit text-* utility inherits the body's
+   unresolved --foreground (falls back to black on the dark theme). */
+.agndex-dashboard {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Thin, theme-aware scrollbars used by the board columns. */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--muted-foreground);
+}
+.custom-scrollbar-x::-webkit-scrollbar {
+  height: 8px;
+}
+.custom-scrollbar-x::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar-x::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent);
+  border-radius: 9999px;
+}
+.custom-scrollbar-x::-webkit-scrollbar-thumb:hover {
+  background-color: var(--muted-foreground);
+}
+
+/* ---------------------------------------------------------------------------
+ * Rules from the same Watermelon UI registry entry (agndex-dashboard) that
+ * were dropped when this file was trimmed. Without them, tooltips lose their
+ * inverted contrast, dropdown rows lose their padding, and the `.no-scrollbar`
+ * helper used by the dashboard shell does not exist.
+ * ------------------------------------------------------------------------- */
+body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
+  background-color: var(--foreground) !important;
+  color: var(--background) !important;
+}
+
+body:has(.agndex-dashboard) [data-slot='tooltip-content'] > svg {
+  background-color: var(--foreground) !important;
+  fill: var(--foreground) !important;
+}
+
+.no-scrollbar,
+.no-scrollbar * {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar,
+.no-scrollbar *::-webkit-scrollbar {
+  display: none;
+}
+
+body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-item'],
+body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-sub-trigger'] {
+  padding-inline: 0.625rem;
+  padding-block: 0.625rem;
+}
+
+body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-checkbox-item'],
+body:has(.agndex-dashboard) [data-slot='dropdown-menu-content'] [data-slot='dropdown-menu-radio-item'] {
+  padding-block: 0.625rem;
+  padding-left: 0.625rem;
+  padding-right: 2rem;
+}

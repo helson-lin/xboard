@@ -1,0 +1,22 @@
+services:
+  api:
+    image: ${XBOARD_IMAGE:-xboard-api:local}
+    build:
+      context: .
+    init: true
+    restart: unless-stopped
+    ports:
+      - "${XBOARD_BIND_IP:-127.0.0.1}:${XBOARD_PORT:-8765}:8765"
+    environment:
+      PORT: "8765"
+      XBOARD_DATA_DIR: /var/lib/xboard
+      XBOARD_CONFIG_DIR: /etc/xboard
+    volumes:
+      - ./data:/var/lib/xboard
+      - ./config:/etc/xboard
+    stop_grace_period: 2m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

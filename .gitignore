@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+web/dist/
+web/deploy/
+*.local
+
+# Runtime data (database + downloaded media + cookies)
+data/
+config/cookies.txt
+config/storage.json
+config/auth.json
+config/api_token.json
+config/secret.key
+config/settings.json
+.env
+.env.*
+!.env.example
+
+# Legacy native frontend backup
+static_legacy/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.log
