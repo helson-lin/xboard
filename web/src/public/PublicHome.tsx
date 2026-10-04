@@ -144,14 +144,14 @@ export default function PublicHome() {
     <div className="agndex-dashboard min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="min-w-0">
-            <a href="/" className="flex items-center gap-2 rounded-xl bg-muted px-2.5 py-2 text-base font-semibold">
-              <LayoutGrid className="size-7 rounded-lg bg-foreground p-1.5 text-background" />
+          <div className="shrink-0">
+            <a href="/" className="flex items-center gap-2 whitespace-nowrap rounded-xl bg-muted px-2.5 py-2 text-base font-semibold">
+              <LayoutGrid className="size-7 shrink-0 rounded-lg bg-foreground p-1.5 text-background" />
               XBoard
             </a>
           </div>
 
-          <div className="relative ml-auto w-full max-w-xs">
+          <div className="relative ml-auto min-w-0 flex-1 max-w-xs">
             <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={q}
