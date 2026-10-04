@@ -200,7 +200,11 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   color: var(--foreground);
 }
 
-/* Thin, theme-aware scrollbars used by the board columns. */
+/* Thin, theme-aware scrollbars used by the board columns and category sidebar. */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--muted-foreground) 35%, transparent) transparent;
+}
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 8px;

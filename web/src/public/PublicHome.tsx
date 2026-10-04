@@ -194,7 +194,7 @@ export default function PublicHome() {
       </header>
 
       <div className="flex">
-        <aside className="sticky top-[73px] hidden h-[calc(100vh-73px)] w-52 shrink-0 overflow-y-auto border-r border-border/40 px-4 py-4 md:block" aria-label="推文分类">
+        <aside className="custom-scrollbar sticky top-[73px] hidden h-[calc(100vh-73px)] w-52 shrink-0 overflow-y-auto border-r border-border/40 px-4 py-4 md:block" aria-label="推文分类">
           <p className="mb-3 px-2 text-xxs font-medium tracking-wide text-muted-foreground">浏览分类</p>
           <button type="button" onClick={() => setTag(null)}
             className={`mb-1 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${tag === null ? 'bg-muted font-semibold' : 'text-muted-foreground hover:bg-muted'}`}>
