@@ -28,7 +28,8 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { VideoPlayer } from '@/components/board/VideoPlayer'
 import { ZoomableImage, type ImageZoomHandle } from '@/components/board/ZoomableImage'
-import type { MediaItem, Post } from '@/lib/types'
+import { PostTagEditor } from '@/components/board/PostTagEditor'
+import type { MediaItem, Post, Tag } from '@/lib/types'
 import {
   formatCount,
   formatDate,
@@ -66,6 +67,8 @@ export function PostLightbox({
   onDelete,
   onRetag,
   onSaveNote,
+  onSaveTags,
+  tags = [],
   tagColor,
   busy,
   readOnly,
@@ -78,6 +81,8 @@ export function PostLightbox({
   onDelete?: (post: Post) => void
   onRetag?: (post: Post) => void
   onSaveNote?: (post: Post, note: string) => void
+  onSaveTags?: (post: Post, tags: string[]) => Promise<void>
+  tags?: Tag[]
   tagColor: (name: string) => string | undefined
   busy: boolean
   readOnly?: boolean
@@ -344,6 +349,10 @@ export function PostLightbox({
                       </div>
                     </div>
                   </div>
+
+                  {!readOnly && onSaveTags && <div className="px-4 pb-3">
+                    <PostTagEditor key={post.id} post={post} tags={tags} onSave={onSaveTags} />
+                  </div>}
 
                   <div className="flex flex-wrap items-center gap-1.5 px-4 pb-3">
                     {post.tags?.length ? (

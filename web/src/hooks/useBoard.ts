@@ -146,8 +146,9 @@ export function useBoard() {
   const updatePost = useCallback(async (id: string, patch: { note?: string; tags?: string[] }) => {
     const updated = await api.updatePost(id, patch)
     setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, ...updated } : p)))
+    if (patch.tags) await loadFacets()
     return updated
-  }, [])
+  }, [loadFacets])
 
   const retagPost = useCallback(async (id: string) => {
     const r = await api.retagPost(id)

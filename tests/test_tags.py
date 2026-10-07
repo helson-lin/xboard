@@ -17,3 +17,14 @@ class TagCountsTests(unittest.TestCase):
                 self.assertEqual(rows[empty]['count'], 0)
                 self.assertEqual(rows[empty]['color'], '#c084fc')
                 self.assertEqual(rows[used]['count'], 1)
+
+    def test_manual_edit_replaces_auto_tags_and_can_clear_all(self):
+        with sqlite3.connect(':memory:') as conn:
+            conn.row_factory = sqlite3.Row
+            conn.executescript(db.SCHEMA)
+            with patch.object(db, 'get_conn', return_value=conn):
+                db.set_post_tags('post-1', [('自动', 1.0)], source='auto')
+                db.set_post_tags('post-1', [('自定义', 1.0)], source='manual', replace_all=True)
+                self.assertEqual(db.post_tag_names('post-1'), ['自定义'])
+                db.set_post_tags('post-1', [], source='manual', replace_all=True)
+                self.assertEqual(db.post_tag_names('post-1'), [])

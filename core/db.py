@@ -201,10 +201,13 @@ def ensure_tag(name: str, kind: str = "auto", color: str | None = None) -> int:
 
 
 def set_post_tags(post_id: str, tags: list[tuple[str, float]],
-                  source: str = "auto", replace_source: bool = True) -> None:
+                  source: str = "auto", replace_source: bool = True,
+                  replace_all: bool = False) -> None:
     with _write_lock:
         conn = get_conn()
-        if replace_source:
+        if replace_all:
+            conn.execute("DELETE FROM post_tags WHERE post_id=?", (post_id,))
+        elif replace_source:
             conn.execute(
                 "DELETE FROM post_tags WHERE post_id=? AND source=?", (post_id, source)
             )

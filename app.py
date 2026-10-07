@@ -469,7 +469,8 @@ def update_post(post_id: str, payload: dict = Body(...)):
     if "tags" in payload:
         names = [str(t).strip() for t in payload["tags"] if str(t).strip()]
         db.set_post_tags(post_id, [(n, 1.0) for n in names],
-                         source="manual", replace_source=True)
+                         source="manual", replace_all=True)
+        PUBLIC_CACHE.clear()
     return post_payload(db.get_post(post_id))
 
 

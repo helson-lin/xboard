@@ -252,6 +252,8 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           }}
           onDelete={handleDelete}
           onRetag={(post) => void retagPost(post.id)}
+          tags={tags}
+          onSaveTags={async (post, tags) => { await updatePost(post.id, { tags }) }}
           onSaveNote={(post, note) => void updatePost(post.id, { note })}
           tagColor={tagColor}
           busy={busy}
