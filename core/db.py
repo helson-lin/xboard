@@ -247,7 +247,7 @@ def tag_counts() -> list[dict]:
         """
         SELECT t.id, t.name, t.color, t.kind, COUNT(pt.post_id) AS count
         FROM tags t
-        JOIN post_tags pt ON pt.tag_id = t.id
+        LEFT JOIN post_tags pt ON pt.tag_id = t.id
         GROUP BY t.id
         ORDER BY count DESC, t.name
         """
