@@ -36,7 +36,7 @@ export function BoardPage({
       ) : null}
 
       {loading && posts.length === 0 ? (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-4">
           {SKELETONS.map((i) => (
             <Skeleton key={i} className="h-72 rounded-xl" />
           ))}
@@ -58,7 +58,7 @@ export function BoardPage({
         <div
           className={
             view === 'grid'
-              ? 'columns-1 gap-4 sm:columns-2 xl:columns-3'
+              ? 'w-full columns-[20rem] gap-4'
               : 'flex flex-col gap-3'
           }
         >
@@ -69,7 +69,11 @@ export function BoardPage({
               onOpen={onOpen}
               onDelete={onDelete}
               tagColor={tagColor}
-              className={view === 'grid' ? 'mb-4 break-inside-avoid' : undefined}
+              className={
+                view === 'grid'
+                  ? 'mb-4 max-w-full break-inside-avoid-column'
+                  : undefined
+              }
             />
           ))}
         </div>

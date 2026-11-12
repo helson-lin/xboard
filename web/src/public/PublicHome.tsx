@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Inbox, Loader2, Search, X, LayoutGrid, Hash, Home } from 'lucide-react'
+import { Hash, Inbox, LayoutGrid, Loader2, Search, X } from 'lucide-react'
 
 import { PostCard } from '@/components/board/PostCard'
 import { PostLightbox } from '@/components/board/PostLightbox'
@@ -174,11 +174,18 @@ export default function PublicHome() {
         </div>
 
         {tags.length > 0 ? (
-          <div className="flex gap-2 overflow-x-auto px-4 pb-3 md:hidden [scrollbar-width:none]">
+          <div
+            className="custom-scrollbar-x flex items-center gap-2 overflow-x-auto border-t border-border/40 px-4 py-2.5"
+            aria-label="推文分类"
+          >
+            <span className="flex shrink-0 items-center gap-1.5 pr-1 text-xs font-medium text-muted-foreground">
+              <Hash className="size-3.5" />
+              分类
+            </span>
             <button type="button" onClick={() => setTag(null)} className={chipClass(tag === null)}>
               全部
             </button>
-            {tags.map((t) => (
+            {tags.filter((t) => t.count > 0).map((t) => (
               <button
                 key={t.name}
                 type="button"
@@ -192,23 +199,6 @@ export default function PublicHome() {
           </div>
         ) : null}
       </header>
-
-      <div className="flex">
-        <aside className="custom-scrollbar sticky top-[73px] hidden h-[calc(100vh-73px)] w-52 shrink-0 overflow-y-auto border-r border-border/40 px-4 py-4 md:block" aria-label="推文分类">
-          <p className="mb-3 px-2 text-xxs font-medium tracking-wide text-muted-foreground">浏览分类</p>
-          <button type="button" onClick={() => setTag(null)}
-            className={`mb-1 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${tag === null ? 'bg-muted font-semibold' : 'text-muted-foreground hover:bg-muted'}`}>
-            <Home className="size-4" /> 全部推文
-          </button>
-          {tags.filter((t) => t.count > 0).map((t) => (
-            <button key={t.name} type="button" onClick={() => setTag(tag === t.name ? null : t.name)}
-              className={`mb-1 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${tag === t.name ? 'bg-muted font-semibold' : 'text-muted-foreground hover:bg-muted'}`}>
-              <Hash className="size-3.5 opacity-60" />
-              <span className="truncate">{t.name}</span>
-              <span className="ml-auto text-xxs opacity-60">{t.count}</span>
-            </button>
-          ))}
-        </aside>
 
       <main className="min-w-0 flex-1 px-4 py-5">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
@@ -268,7 +258,6 @@ export default function PublicHome() {
           </p>
         ) : null}
       </main>
-      </div>
 
       <PostLightbox
         posts={posts}

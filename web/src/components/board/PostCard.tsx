@@ -303,9 +303,9 @@ export function PostCard({ post, onOpen, onDelete, tagColor, className, readOnly
       {/* body：仅纯文本推文展示正文；媒体卡片只保留标签/元信息 */}
       <div className="flex flex-col gap-2 px-3 pb-3 pt-4">
         {failed ? (
-          <div className="text-destructive flex items-start gap-2 rounded-md bg-destructive/10 px-2.5 py-2 text-xxs">
+          <div className="text-destructive flex min-w-0 items-start gap-2 rounded-md bg-destructive/10 px-2.5 py-2 text-xxs">
             <AlertTriangle className="mt-px size-3.5 shrink-0" />
-            <span className="min-w-0 break-words">{post.error || '下载失败'}</span>
+            <span className="min-w-0 break-all">{post.error || '下载失败'}</span>
           </div>
         ) : null}
 
@@ -352,7 +352,7 @@ export function PostCard({ post, onOpen, onDelete, tagColor, className, readOnly
         ) : null}
 
         {/* footer */}
-        <div className="text-muted-foreground flex items-center justify-between gap-2 pt-1 text-xxs">
+        <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-1 text-xxs">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1">
               <Heart className="size-3" />

@@ -41,7 +41,7 @@ export function SettingsPage({
   const cookiesPresent = settings?.cookies_present
 
   return (
-    <div className="grid max-w-3xl gap-4">
+    <div className="mx-auto grid w-full max-w-5xl gap-4">
       <Card>
         <CardHeader>
           <CardTitle className="text-sm">下载</CardTitle>

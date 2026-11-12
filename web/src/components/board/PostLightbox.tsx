@@ -243,10 +243,13 @@ export function PostLightbox({
           </div>
 
           {/* Body */}
-          <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+          <div className="relative flex min-h-0 flex-1 flex-col md:flex-row">
             {/* Media pane */}
             <div
-              className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-4 sm:p-8"
+              className={cn(
+                'relative flex min-h-0 flex-1 items-center justify-center overflow-hidden p-4 sm:p-8',
+                !collapsed && 'md:pr-[26rem]',
+              )}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
               onWheel={handleWheel}
@@ -278,14 +281,22 @@ export function PostLightbox({
                 onClick={next}
                 disabled={index >= posts.length - 1}
                 aria-label="下一条推文"
-                className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white/90 shadow-lg backdrop-blur transition hover:bg-black/70 disabled:pointer-events-none disabled:opacity-30 sm:right-4"
+                className={cn(
+                  'absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white/90 shadow-lg backdrop-blur transition-[right,background-color,opacity] hover:bg-black/70 disabled:pointer-events-none disabled:opacity-30 sm:right-4',
+                  !collapsed && 'md:right-[25rem]',
+                )}
               >
                 <ChevronRight className="size-6" />
               </button>
 
               {/* Thumbnail strip for multi-media posts */}
               {media.length > 1 ? (
-                <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2.5 rounded-full bg-black/50 p-2 backdrop-blur">
+                <div
+                  className={cn(
+                    'absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2.5 rounded-full bg-black/50 p-2 backdrop-blur transition-[left]',
+                    !collapsed && 'md:left-[calc((100%-24rem)/2)]',
+                  )}
+                >
                   {media.map((m, i) => (
                     <button
                       key={m.id ?? `${m.url}-${i}`}
@@ -316,7 +327,7 @@ export function PostLightbox({
               {!collapsed ? (
                 <motion.div
                   key="post-detail"
-                  className="flex max-h-[55%] w-full shrink-0 flex-col overflow-y-auto border-t border-border/40 bg-background md:max-h-none md:w-[24rem] md:border-l md:border-t-0"
+                  className="flex max-h-[55%] w-full shrink-0 flex-col overflow-y-auto border-t border-border/40 bg-background md:absolute md:inset-y-4 md:right-4 md:z-30 md:max-h-none md:w-[24rem] md:rounded-xl md:border md:border-border/60 md:bg-background/95 md:shadow-2xl md:backdrop-blur-xl"
                   initial={{ opacity: 0, x: 24 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 24 }}

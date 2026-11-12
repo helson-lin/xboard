@@ -52,7 +52,8 @@ export function AppSidebar({
   refreshing: boolean
   onLogout: () => void
 }) {
-  const { setOpenMobile, isMobile } = useSidebar()
+  const { setOpenMobile, isMobile, state } = useSidebar()
+  const collapsed = !isMobile && state === 'collapsed'
 
   const go = (key: PageKey) => {
     onNavigate(key)
@@ -64,14 +65,21 @@ export function AppSidebar({
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" onClick={() => go('board')}>
-              <AgndexLogo className="size-8 shrink-0" />
-              <div className="grid flex-1 text-left leading-tight">
-                <span className="truncate text-sm font-semibold">XBoard</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  X 推文归档
-                </span>
-              </div>
+            <SidebarMenuButton
+              size="lg"
+              className="px-2!"
+              aria-label={collapsed ? '返回看板' : undefined}
+              onClick={() => go('board')}
+            >
+              <AgndexLogo className="size-4! shrink-0" />
+              {!collapsed ? (
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate text-sm font-semibold">XBoard</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    X 推文归档
+                  </span>
+                </div>
+              ) : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -90,12 +98,11 @@ export function AppSidebar({
                     onClick={() => go(item.key)}
                   >
                     <item.icon />
-                    <span>{item.label}</span>
-                    {item.key === 'jobs' && pendingJobs > 0 ? (
-                      <Badge
-                        variant="secondary"
-                        className="ml-auto group-data-[collapsible=icon]:hidden"
-                      >
+                    {!collapsed ? (
+                      <span>{item.label}</span>
+                    ) : null}
+                    {!collapsed && item.key === 'jobs' && pendingJobs > 0 ? (
+                      <Badge variant="secondary" className="ml-auto">
                         {pendingJobs}
                       </Badge>
                     ) : null}
@@ -112,36 +119,42 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="刷新" onClick={onRefresh}>
               <RefreshCw className={refreshing ? 'animate-spin' : undefined} />
-              <span>刷新数据</span>
+              {!collapsed ? (
+                <span>刷新数据</span>
+              ) : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="退出登录" onClick={onLogout}>
               <LogOut />
-              <span>退出登录</span>
+              {!collapsed ? (
+                <span>退出登录</span>
+              ) : null}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <div className="grid grid-cols-3 gap-1 rounded-lg bg-sidebar-accent/40 p-2 text-center text-[11px] text-muted-foreground group-data-[collapsible=icon]:hidden">
-          <div>
-            <div className="text-sm font-semibold text-foreground">
-              {stats?.posts ?? 0}
+        {!collapsed ? (
+          <div className="grid grid-cols-3 gap-1 rounded-lg bg-sidebar-accent/40 p-2 text-center text-[11px] text-muted-foreground">
+            <div>
+              <div className="text-sm font-semibold text-foreground">
+                {stats?.posts ?? 0}
+              </div>
+              推文
             </div>
-            推文
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-foreground">
-              {stats?.videos ?? 0}
+            <div>
+              <div className="text-sm font-semibold text-foreground">
+                {stats?.videos ?? 0}
+              </div>
+              视频
             </div>
-            视频
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-foreground">
-              {stats?.tags ?? 0}
+            <div>
+              <div className="text-sm font-semibold text-foreground">
+                {stats?.tags ?? 0}
+              </div>
+              标签
             </div>
-            标签
           </div>
-        </div>
+        ) : null}
       </SidebarFooter>
     </Sidebar>
   )
