@@ -1,5 +1,7 @@
 # XBoard
 
+![XBoard 看板封面](docs/images/cover.webp)
+
 自托管的 X（Twitter）推文归档看板：粘贴推文链接 → yt-dlp 下载视频 / 抓取原图 →
 自动归类打标签 → 在网页里按标签、作者、媒体类型浏览。
 
@@ -11,6 +13,22 @@
 
 更多背景文档：[DOCKER-DEPLOY.md](DOCKER-DEPLOY.md)（容器、反向代理、搬数据）、
 [R2-MIGRATION.md](R2-MIGRATION.md)（历史媒体迁移到 R2）。
+
+## 截图
+
+| 看板（浅色） | 看板（深色） |
+| --- | --- |
+| ![看板浅色](docs/images/board-light.webp) | ![看板深色](docs/images/board-dark.webp) |
+
+| 推文详情 | 分类管理 |
+| --- | --- |
+| ![推文详情](docs/images/detail.webp) | ![分类管理](docs/images/tags.webp) |
+
+| 任务队列 | 设置 |
+| --- | --- |
+| ![任务队列](docs/images/jobs.webp) | ![设置](docs/images/settings.webp) |
+
+移动端（390×844）：![移动端看板](docs/images/mobile.webp)
 
 ## 部署
 
@@ -46,6 +64,64 @@ curl --fail http://127.0.0.1:8765/healthz
 - 镜像内含 Python 3.12、ffmpeg、yt-dlp、已构建的前端，以及 R2 需要的 boto3。
 - 默认只绑定 `127.0.0.1`（`XBOARD_BIND_IP` / `XBOARD_PORT` 可改），对外请走 Nginx / Caddy / Cloudflare Tunnel。
 - 反向代理、搬迁已有数据、公开前端分离部署见 [DOCKER-DEPLOY.md](DOCKER-DEPLOY.md)。
+
+#### 飞牛 NAS（fnOS）安装
+
+fnOS 基于 Debian 12，「Docker」是一等公民（应用中心安装），直接用 **项目（Compose）**
+粘贴下面的配置即可，无需 SSH 构建。
+
+1. **建共享文件夹**：文件管理里新建 `xboard`（例如挂在存储空间 1 下，
+   真实路径形如 `/vol1/1000/xboard`，以你 NAS 的编号为准），并在里面建两个子目录
+   `data`、`config`。
+
+2. **给容器用户授权**：镜像内以 UID `10001` 运行，目录属主不对会在启动时报
+   `Permission denied`。用 fnOS 的终端/SSH 执行：
+
+   ```bash
+   sudo chown -R 10001:10001 /vol1/1000/xboard
+   ```
+
+3. **新建项目**：应用中心 → Docker → **项目 → 新增**，名称填 `xboard`，
+   路径选 `/vol1/1000/xboard`，粘贴下面内容后点「构建」（或「部署」）：
+
+   ```yaml
+   services:
+     xboard:
+       image: ghcr.io/helson-lin/xboard:latest
+       container_name: xboard
+       restart: unless-stopped
+       ports:
+         - "8765:8765"
+       environment:
+         PORT: "8765"
+         XBOARD_DATA_DIR: /var/lib/xboard
+         XBOARD_CONFIG_DIR: /etc/xboard
+       volumes:
+         - /vol1/1000/xboard/data:/var/lib/xboard
+         - /vol1/1000/xboard/config:/etc/xboard
+       stop_grace_period: 2m
+   ```
+
+   > 端口用 `"8765:8765"`（绑定 `0.0.0.0`）才能在局域网访问；
+   > 只想反代访问可改成 `"127.0.0.1:8765:8765"`。
+
+4. **取初始密码**：容器启动后看日志（Docker → 容器 → `xboard` → 日志），
+   首次会打印管理员密码与 API Token，只打印一次。
+
+5. **访问**：`http://<NAS内网IP>:8765/admin`；公开只读页是 `http://<NAS内网IP>:8765/`。
+
+注意事项：
+
+- 更新：Docker → 项目 → `xboard` → 编辑，把 `latest` 换成新 tag 或保留 `latest`
+  后「拉取镜像 → 重新部署」；数据在共享文件夹里，重建容器不丢。
+- 外网访问：fnOS 的 **FN Connect / 远程访问** 给 8765 开一条入口，或按
+  [DOCKER-DEPLOY.md](DOCKER-DEPLOY.md) 用 Cloudflare Tunnel / 反代；**不要**把
+  8765 直接暴露到公网。
+- 备份：直接打包共享文件夹里的 `data/`（含 `xboard.db` 与媒体）和 `config/`。
+- 想用 R2 而不是 NAS 本地盘：把 `config/storage.json` 放进共享文件夹的 `config/`，
+  见下文「存储后端」。
+- 若 Docker 应用拉取 GHCR 失败：在 Docker → 仓库/注册表里添加 `ghcr.io` 凭据
+  （GitHub 用户名 + 带 `read:packages` 的 PAT），或改用 `docker login` 后重试。
 
 ### 方式二：本机直接运行
 
