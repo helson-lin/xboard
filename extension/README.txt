@@ -5,7 +5,7 @@ XBoard Saver 安装说明
 2. Chrome 打开 chrome://extensions；Edge 打开 edge://extensions。
 3. 开启“开发者模式”。
 4. 点击“加载已解压的扩展程序”，选择 xboard-extension 文件夹。
-5. 在 XBoard 管理端“设置 → 浏览器插件”复制 API Token。
+5. 在 XBoard 管理台“设置 → 浏览器插件”复制 API Token。
 6. 打开插件，填写 XBoard 地址和 API Token，点击“保存配置”。
 
 使用方式

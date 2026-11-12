@@ -80,7 +80,7 @@ docker compose logs api | head -20      # 或直接看本机启动输出
 - 登录名默认 `admin`，密码以 PBKDF2-SHA256（26 万轮）哈希存 `config/auth.json`。
 - 用环境变量接管：`XBOARD_USERNAME` / `XBOARD_PASSWORD`（优先生效，不落盘）。
 - 插件和脚本用的长期 Token 存 `config/api_token.json`；丢失或泄露可在
-  「设置 → 插件 API Token」查看/轮换，或 `POST /api/auth/token/rotate`。
+  「设置 → 浏览器插件」查看/轮换（插件 API Token），或 `POST /api/auth/token/rotate`。
 - 这些文件都在 `.gitignore` 里，**不要**提交或贴到 issue。
 
 ## 使用
@@ -207,7 +207,7 @@ Chrome `chrome://extensions` / Edge `edge://extensions` → 开启开发者模�
 
 ## 目录结构
 
-```
+```text
 xboard/
 ├── app.py                 FastAPI 路由与鉴权中间件
 ├── run.sh / build.sh      启动 / 构建并部署前端
@@ -238,8 +238,9 @@ xboard/
 ## 开发与测试
 
 ```bash
-cd web && npm run lint        # oxlint
-python3 -m unittest discover -s tests -v
+cd web && npm run lint                      # oxlint
+python3 -m unittest discover -s tests -v     # 后端离线测试
+npx markdownlint-cli2 "*.md"                 # 文档格式（.markdownlint.json）
 ```
 
 不依赖外网的测试都在 `tests/`；`test_r2.py` 用假的 S3 客户端，不会碰真实桶。
