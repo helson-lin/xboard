@@ -25,6 +25,9 @@ config/settings.json
 # Legacy native frontend backup
 static_legacy/
 
+# Deployed frontend build output (regenerate with ./build.sh)
+static/
+
 # Editor / OS
 .vscode/
 .idea/
