@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
 import { AddPostsDialog } from '@/components/board/AddPostsDialog'
@@ -136,7 +136,6 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     <TooltipProvider delayDuration={200}>
       <SidebarProvider
         className="agndex-dashboard h-svh overflow-hidden no-scrollbar"
-        style={{ '--sidebar-width': '17.25rem' } as CSSProperties}
       >
         <AppSidebar
           page={page}

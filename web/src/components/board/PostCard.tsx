@@ -25,7 +25,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { MediaItem, Post } from '@/lib/types'
-import { formatCount, formatDate, formatDuration, formatSize, hexToRgba } from '@/lib/format'
+import {
+  formatCount,
+  formatDate,
+  formatDuration,
+  formatSize,
+  hexToRgba,
+  tagInk,
+} from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { triggerDownload, triggerPublicDownload } from '@/lib/api'
 
@@ -327,13 +334,13 @@ export function PostCard({ post, onOpen, onDelete, tagColor, className, readOnly
                 <Badge
                   key={name}
                   variant="outline"
-                  className="rounded-md px-1.5 py-1 text-xxs font-normal"
+                  className="tag-ink rounded-md px-1.5 py-1 text-xxs font-normal"
                   style={
                     color
                       ? {
+                          ...tagInk(color),
                           backgroundColor: hexToRgba(color, 0.06),
                           borderColor: hexToRgba(color, 0.18),
-                          color,
                         }
                       : undefined
                   }

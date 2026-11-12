@@ -1,5 +1,13 @@
 /** Small display formatters shared across the board UI. */
 
+import type { CSSProperties } from 'react'
+
+/** Feed a tag's raw hex to the `.tag-ink` utility, which clamps its lightness
+ *  until the label clears WCAG AA in either theme. */
+export function tagInk(hex: string): CSSProperties {
+  return { '--tag-hue': hex } as CSSProperties
+}
+
 export function formatSize(bytes?: number | null): string {
   if (!bytes || bytes <= 0) return '—'
   const units = ['B', 'KB', 'MB', 'GB', 'TB']

@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import type { Tag } from '@/lib/types'
-import { hexToRgba } from '@/lib/format'
+import { hexToRgba, tagInk } from '@/lib/format'
 
 export function TagsPage({
   tags,
@@ -45,11 +45,11 @@ export function TagsPage({
   const [creating, setCreating] = useState(false)
   const [renaming, setRenaming] = useState<Tag | null>(null)
   const [name, setName] = useState('')
-  const [color, setColor] = useState('#c084fc')
+  const [color, setColor] = useState('#10b981')
 
   const openCreate = () => {
     setName('')
-    setColor('#c084fc')
+    setColor('#10b981')
     setCreating(true)
   }
 
@@ -175,9 +175,10 @@ export function TagsPage({
                 />
                 <Badge
                   variant="outline"
+                  className="tag-ink"
                   style={{
+                    ...tagInk(color),
                     borderColor: hexToRgba(color, 0.5),
-                    color,
                   }}
                 >
                   {name || '预览'}

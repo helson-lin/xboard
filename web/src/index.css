@@ -24,20 +24,24 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --card-hover: oklch(0.94 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.68 0.17 336.255);
+  /* Contrast notes (WCAG 2.2 AA): primary is darkened from oklch 0.596 to
+   * 0.52 so white text on it reaches 5.1:1; muted-foreground 0.52 keeps
+   * 4.8:1 on --card; info 0.55 keeps 5.0:1 on --card. */
+  --primary: oklch(0.52 0.145 163.225);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.52 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.574 0.232 29.36);
-  --info: oklch(0.591 0.249 293.89);
+  --destructive-foreground: oklch(0.985 0 0);
+  --info: oklch(0.55 0.249 293.89);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --input-addon-foreground: oklch(0.777 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: oklch(0.52 0.145 163.225);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -45,12 +49,12 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.68 0.17 336.255);
+  --sidebar-primary: oklch(0.52 0.145 163.225);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.94 0 0);
   --sidebar-accent-foreground: oklch(0.145 0 0);
   --sidebar-border: oklch(0.9 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-ring: oklch(0.52 0.145 163.225);
   --sidebar-muted: oklch(0.556 0 0);
   --sidebar-muted-foreground: oklch(0.45 0 0);
   --sidebar-badge: oklch(0.93 0 0);
@@ -71,7 +75,7 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --card-hover: oklch(0.325 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.711 0.165 336.255);
+  --primary: oklch(0.765 0.177 163.223);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -79,12 +83,15 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.574 0.232 29.36);
-  --info: oklch(0.591 0.249 293.89);
+  /* Lightened so `text-destructive` clears 4.5:1 on the dark card (was 2.9:1).
+   * Destructive buttons/badges therefore switch to a dark foreground. */
+  --destructive: oklch(0.7 0.19 25);
+  --destructive-foreground: oklch(0.145 0 0);
+  --info: oklch(0.7 0.249 293.89);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --input-addon-foreground: oklch(0.777 0 0);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.765 0.177 163.223);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -92,12 +99,12 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --chart-5: oklch(0.269 0 0);
   --sidebar: oklch(0.173 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.711 0.165 336.255);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.765 0.177 163.223);
+  --sidebar-primary-foreground: oklch(0.205 0 0);
   --sidebar-accent: oklch(0.325 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-ring: oklch(0.765 0.177 163.223);
   --sidebar-muted: oklch(0.535 0 0);
   --sidebar-muted-foreground: oklch(0.725 0 0);
   --sidebar-badge: oklch(0.244 0 0);
@@ -122,6 +129,7 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-info: var(--info);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -189,6 +197,16 @@ body:has(.agndex-dashboard) [data-slot='tooltip-content'] {
 }
 .bg-info\/10 {
   background-color: color-mix(in oklab, var(--info) 10%, transparent);
+}
+
+/* Tag chips keep the tag's palette hue but clamp its lightness until the label
+ * clears 4.5:1 against the card surface (dark chips get lifted, light ones
+ * darkened). Set the raw tag colour on the element as `--tag-hue`. */
+.tag-ink {
+  color: oklch(from var(--tag-hue) clamp(0, l, 0.5) c h);
+}
+.dark .tag-ink {
+  color: oklch(from var(--tag-hue) clamp(0.74, l, 1) c h);
 }
 
 /* Registry root rule from the agndex-dashboard design system:

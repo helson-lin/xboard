@@ -30,6 +30,7 @@ import {
   formatDuration,
   formatSize,
   hexToRgba,
+  tagInk,
 } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { triggerDownload } from '@/lib/api'
@@ -167,10 +168,12 @@ export function PostDetailSheet({
                       <Badge
                         key={t}
                         variant="outline"
-                        style={{
-                          borderColor: c ? hexToRgba(c, 0.5) : undefined,
-                          color: c,
-                        }}
+                        className={c ? 'tag-ink' : undefined}
+                        style={
+                          c
+                            ? { ...tagInk(c), borderColor: hexToRgba(c, 0.5) }
+                            : undefined
+                        }
                       >
                         {t}
                       </Badge>

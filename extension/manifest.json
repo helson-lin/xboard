@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "XBoard Saver",
+  "version": "1.0.0",
+  "description": "从 X/Twitter 页面一键保存推文到自己的 XBoard。",
+  "permissions": ["storage", "tabs", "contextMenus"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "保存到 XBoard",
+    "default_popup": "popup.html"
+  }
+}

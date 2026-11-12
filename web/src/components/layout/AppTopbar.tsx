@@ -77,13 +77,15 @@ export function AppTopbar({
               value={q}
               onChange={(e) => onQ(e.target.value)}
               placeholder="搜索正文 / 作者…"
+              aria-label="搜索正文或作者"
               className="w-56 pl-8 lg:w-72"
             />
             {q ? (
               <button
                 type="button"
                 onClick={() => onQ('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="清空搜索"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <X className="size-4" />
               </button>
@@ -91,7 +93,7 @@ export function AppTopbar({
           </div>
 
           <Select value={sort} onValueChange={(v) => onSort(v as SortKey)}>
-            <SelectTrigger className="hidden w-36 sm:flex">
+            <SelectTrigger className="hidden w-36 sm:flex" aria-label="排序">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -126,7 +128,7 @@ export function AppTopbar({
         </>
       ) : null}
 
-      <Button size="sm" onClick={onAdd} className="gap-1.5">
+      <Button size="sm" onClick={onAdd} className="gap-1.5" aria-label="添加推文">
         <Plus />
         <span className="hidden sm:inline">添加推文</span>
       </Button>

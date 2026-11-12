@@ -27,7 +27,7 @@ import {
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '16rem';
+const SIDEBAR_WIDTH = '10rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
@@ -1293,7 +1293,6 @@ function HighlightItem<T extends React.ElementType>({
 
   const dataAttributes = {
     'data-active': isActive ? 'true' : 'false',
-    'aria-selected': isActive,
     'data-disabled': isDisabled,
     'data-value': childValue,
     'data-highlight': true,

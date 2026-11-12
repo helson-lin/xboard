@@ -274,7 +274,10 @@ def view_api_token(request: Request):
     """View the API token (requires a logged-in browser session)."""
     if verify_token(request.cookies.get(COOKIE_NAME)) is None:
         return JSONResponse({"detail": "需要登录"}, status_code=401)
-    return {"token": get_api_token()}
+    return JSONResponse(
+        {"token": get_api_token()},
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @app.post("/api/auth/token/rotate")
@@ -282,7 +285,34 @@ def rotate_api_token_endpoint(request: Request):
     """Rotate the API token (requires a logged-in browser session)."""
     if verify_token(request.cookies.get(COOKIE_NAME)) is None:
         return JSONResponse({"detail": "需要登录"}, status_code=401)
-    return {"token": rotate_api_token()}
+    return JSONResponse(
+        {"token": rotate_api_token()},
+        headers={"Cache-Control": "no-store"},
+    )
+
+
+@app.get("/api/plugin/download")
+def download_browser_plugin():
+    """Download the unpacked Chrome/Edge extension as a zip archive."""
+    plugin_dir = Path(__file__).resolve().parent / "extension"
+    files = sorted(path for path in plugin_dir.rglob("*") if path.is_file())
+    if not files:
+        raise HTTPException(404, "插件包尚未生成")
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as archive:
+        for path in files:
+            relative = path.relative_to(plugin_dir)
+            archive.write(path, arcname=str(Path("xboard-extension") / relative))
+
+    return Response(
+        content=buf.getvalue(),
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": "attachment; filename=xboard-browser-extension.zip",
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 # ---------------------------------------------------------------- downloads

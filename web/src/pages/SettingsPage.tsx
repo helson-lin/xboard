@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Save, Sparkles } from 'lucide-react'
+import {
+  Check,
+  Copy,
+  Download,
+  Eye,
+  EyeOff,
+  KeyRound,
+  RefreshCw,
+  Save,
+  Sparkles,
+} from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -15,6 +25,7 @@ import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { api } from '@/lib/api'
 import type { Settings } from '@/lib/types'
 
 export function SettingsPage({
@@ -30,6 +41,11 @@ export function SettingsPage({
   const [maxHeight, setMaxHeight] = useState('0')
   const [autoTag, setAutoTag] = useState(false)
   const [rules, setRules] = useState('')
+  const [pluginToken, setPluginToken] = useState('')
+  const [tokenVisible, setTokenVisible] = useState(false)
+  const [tokenLoading, setTokenLoading] = useState(true)
+  const [tokenRotating, setTokenRotating] = useState(false)
+  const [tokenCopied, setTokenCopied] = useState(false)
 
   useEffect(() => {
     if (!settings) return
@@ -37,6 +53,49 @@ export function SettingsPage({
     setMaxHeight(String(settings.max_height ?? 0))
     setAutoTag(Boolean(settings.auto_tag))
   }, [settings])
+
+  useEffect(() => {
+    let alive = true
+    setTokenLoading(true)
+    api
+      .apiToken()
+      .then(({ token }) => {
+        if (alive) setPluginToken(token)
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        if (alive) setTokenLoading(false)
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  const copyPluginToken = async () => {
+    if (!pluginToken) return
+    await navigator.clipboard.writeText(pluginToken)
+    setTokenCopied(true)
+    window.setTimeout(() => setTokenCopied(false), 1800)
+  }
+
+  const rotatePluginToken = async () => {
+    if (
+      !window.confirm(
+        '重新生成后，已安装插件中的旧 Token 将立即失效。确定继续？'
+      )
+    ) {
+      return
+    }
+    setTokenRotating(true)
+    try {
+      const { token } = await api.rotateApiToken()
+      setPluginToken(token)
+      setTokenVisible(true)
+      setTokenCopied(false)
+    } finally {
+      setTokenRotating(false)
+    }
+  }
 
   const cookiesPresent = settings?.cookies_present
 
@@ -125,6 +184,90 @@ export function SettingsPage({
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Sparkles className="size-3.5" />
               留空则仅依赖模型自动判断
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-sm">
+            <KeyRound className="size-4" />
+            浏览器插件
+          </CardTitle>
+          <CardDescription>
+            从 X 页面一键提交推文链接，使用独立 API Token 认证
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-lg border border-border p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">XBoard Saver</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                支持 Chrome 与 Edge，下载 ZIP 后解压并加载已解压的扩展程序
+              </p>
+            </div>
+            <Button asChild variant="outline" className="shrink-0 gap-1.5">
+              <a href={api.pluginDownloadUrl()} download>
+                <Download />
+                下载插件
+              </a>
+            </Button>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-3">
+              <Label htmlFor="plugin-api-token">插件 API Token</Label>
+              <span className="text-xs text-muted-foreground">
+                请勿分享给不可信的人
+              </span>
+            </div>
+            <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
+              <Input
+                id="plugin-api-token"
+                type={tokenVisible ? 'text' : 'password'}
+                value={tokenLoading ? '正在加载…' : pluginToken}
+                readOnly
+                className="min-w-0 flex-1 font-mono text-xs"
+              />
+              <div className="flex shrink-0 gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setTokenVisible((visible) => !visible)}
+                  disabled={tokenLoading || !pluginToken}
+                  aria-label={tokenVisible ? '隐藏 Token' : '显示 Token'}
+                  title={tokenVisible ? '隐藏 Token' : '显示 Token'}
+                >
+                  {tokenVisible ? <EyeOff /> : <Eye />}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => void copyPluginToken()}
+                  disabled={tokenLoading || !pluginToken}
+                >
+                  {tokenCopied ? <Check /> : <Copy />}
+                  {tokenCopied ? '已复制' : '复制'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => void rotatePluginToken()}
+                  disabled={tokenLoading || tokenRotating}
+                >
+                  <RefreshCw className={tokenRotating ? 'animate-spin' : undefined} />
+                  重新生成
+                </Button>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              插件服务器地址填写当前 XBoard 站点地址；重新生成会使旧 Token 立即失效。
             </p>
           </div>
         </CardContent>

@@ -70,6 +70,20 @@ export const api = {
     return request<{ authenticated: boolean; username?: string }>('/api/auth/me')
   },
 
+  apiToken() {
+    return request<{ token: string }>('/api/auth/token')
+  },
+
+  rotateApiToken() {
+    return request<{ token: string }>('/api/auth/token/rotate', {
+      method: 'POST',
+    })
+  },
+
+  pluginDownloadUrl() {
+    return `${BASE}/api/plugin/download`
+  },
+
   listPosts(filters: Filters, limit = 60, offset = 0) {
     return request<PostsPage>(
       `/api/posts${query({

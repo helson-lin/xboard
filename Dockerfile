@@ -22,6 +22,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py migrate_r2.py ./
 COPY core/ ./core/
+COPY extension/ ./extension/
 COPY config/tag_rules.json ./defaults/tag_rules.json
 COPY --from=frontend /build/web/dist/ ./static/
 COPY docker/entrypoint.sh /usr/local/bin/xboard-entrypoint

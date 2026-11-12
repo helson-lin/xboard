@@ -25,6 +25,36 @@ cd /data/xboard
 cd web && npm run dev   # http://127.0.0.1:5173，/api 自动代理到 8765
 ```
 
+## Docker 部署（GHCR 预构建镜像）
+
+`.github/workflows/docker.yml` 在推送 `main`/`master`、推送 `v*` 标签或手动触发时，
+会用测试 + 镜像冒烟检查后把镜像发布到 `ghcr.io/<owner>/<repository>`。标签规则：
+
+| 触发 | 标签 |
+| --- | --- |
+| 默认分支推送 | `latest` + `sha-<commit>` |
+| 其他分支推送 | 分支名 + `sha-<commit>` |
+| `v1.2.3` 标签 | `1.2.3` + `sha-<commit>` |
+| Pull Request | 只跑测试和构建，不推送 |
+
+服务器只需要 `compose.yaml`、`.env`、`data/`、`config/` 四项，不用安装 Node/Python：
+
+```bash
+git clone <your-repo> /srv/xboard && cd /srv/xboard
+cp .env.example .env              # XBOARD_IMAGE 改成 ghcr.io/<owner>/<repository>:latest（小写）
+sudo install -d -o 10001 -g 10001 -m 700 data config
+docker compose pull api
+docker compose up -d --no-build api
+curl --fail http://127.0.0.1:8765/healthz
+```
+
+- 数据在 `./data`（SQLite + 媒体），配置在 `./config`；容器内以 UID 10001 运行，不要用 root 写这两个目录。
+- 想自己构建而不拉镜像：`docker compose up -d --build`。
+- 更新：`docker compose pull api && docker compose up -d --no-build api`。
+- 首次启动的管理密码与 API Token 在 `docker compose logs api` 里，只会打印一次。
+- GHCR 包默认私有，拉取前需 `docker login ghcr.io`（PAT 带 `read:packages`），或把包改为 public。
+- 反向代理、搬迁现有数据、R2 私有桶、公开前端分离部署见 [DOCKER-DEPLOY.md](DOCKER-DEPLOY.md)。
+
 ## 使用
 
 1. 右上角 **＋ 添加推文**，粘贴一条或多条链接，每行一个：
@@ -105,6 +135,7 @@ xboard/
 │   │   ├── lib/                API 客户端、类型、格式化
 │   │   └── pages/              看板 / 标签 / 任务 / 设置
 │   └── dist/               构建产物
+├── extension/             浏览器插件源码（Chrome / Edge Manifest V3）
 ├── static/                 部署后的前端（由 app.py 托管，构建生成）
 ├── config/
 │   ├── tag_rules.json     分类关键词规则
