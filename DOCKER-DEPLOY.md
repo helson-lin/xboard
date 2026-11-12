@@ -9,7 +9,7 @@
 `.github/workflows/docker.yml` 会在 main/master 推送、v 开头标签或手动触发时：
 
 1. 在 Python 3.12 下执行后端离线测试。
-2. 构建 linux/amd64 镜像，包含自动构建的前端。
+2. 构建 linux/amd64 + linux/arm64 多架构镜像，包含自动构建的前端。
 3. 启动测试容器，检查健康接口、公开 API、ffmpeg、yt-dlp 和非 root 运行用户。
 4. 通过 GitHub 自动提供的 GITHUB_TOKEN 发布到 `ghcr.io/<owner>/<repository>`。
 

@@ -49,6 +49,7 @@ curl --fail http://127.0.0.1:8765/healthz
 ```
 
 - 数据在 `./data`（SQLite + 媒体），配置在 `./config`；容器内以 UID 10001 运行，不要用 root 写这两个目录。
+- 镜像同时包含 `linux/amd64` 与 `linux/arm64`，Apple Silicon 和 ARM 服务器可直接拉取。
 - 想自己构建而不拉镜像：`docker compose up -d --build`。
 - 更新：`docker compose pull api && docker compose up -d --no-build api`。
 - 首次启动的管理密码与 API Token 在 `docker compose logs api` 里，只会打印一次。
