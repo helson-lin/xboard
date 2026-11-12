@@ -33,3 +33,6 @@ static/
 .idea/
 .DS_Store
 *.log
+
+# Design reference captures (regenerate with `npm --prefix web run design:shots`)
+design/

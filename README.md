@@ -315,11 +315,18 @@ xboard/
 
 ```bash
 cd web && npm run lint                      # oxlint
-python3 -m unittest discover -s tests -v     # 后端离线测试
-npx markdownlint-cli2 "*.md"                 # 文档格式（.markdownlint.json）
+python3 -m unittest discover -s tests -v    # 后端离线测试
+npx markdownlint-cli2 "*.md"                # 文档格式（.markdownlint.json）
+npm --prefix web run design:shots           # 截图当前界面给设计/代理参考
 ```
 
 不依赖外网的测试都在 `tests/`；`test_r2.py` 用假的 S3 客户端，不会碰真实桶。
+
+改 UI 时想让编码代理（Claude Code / Codex / omp）基于**当前真实界面**而不是想象来改：
+`design:shots` 会用本机 Chrome（`playwright-core`，无需下载浏览器）登录后台，
+把桌面深浅色 + 移动端 + 详情/弹窗截图写入 `design/latest/`（已 gitignore），并生成
+`manifest.json`（页面、主题、视口、文件、抓取时间）。约定与视频/素材抽帧命令见
+[AGENTS.md](AGENTS.md)。
 
 ## 持续集成
 
