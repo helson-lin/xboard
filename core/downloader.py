@@ -278,6 +278,41 @@ def fetch_tweet_meta(tweet_id: str) -> dict | None:
     }
 
 
+def _pick_downloaded_file(info: dict, dest_dir: Path) -> Path | None:
+    """从 yt-dlp 的返回值里挑出真正落盘的文件。
+
+    `_filename` / `requested_downloads[].filepath` 可能为空或为旧版本遗留，
+    而 `Path("")` 恰好是 `.`（cwd 存在，`.exists()` 为真），必须用 is_file 判定。
+    """
+    reported: list[str] = []
+    for item in info.get("requested_downloads") or []:
+        if isinstance(item, dict):
+            filepath = item.get("filepath")
+            if filepath:
+                reported.append(str(filepath))
+    if info.get("_filename"):
+        reported.append(str(info["_filename"]))
+
+    for value in reported:
+        candidate = Path(value).expanduser()
+        if candidate.is_file():
+            return candidate.resolve()
+
+    candidates = sorted(
+        p for p in dest_dir.glob("video.*")
+        if p.is_file() and p.suffix.lower() not in (".json", ".jpg", ".webp")
+    )
+    return candidates[0].resolve() if candidates else None
+
+
+def _media_relative(path: Path) -> str:
+    """媒体文件的库内相对路径；越界（含符号链接逃逸）直接报错。"""
+    try:
+        return str(path.resolve().relative_to(MEDIA_DIR.resolve()))
+    except ValueError as exc:
+        raise DownloadError(f"下载文件不在媒体目录内: {path}") from exc
+
+
 def fetch_to_file(url: str, dest: Path, timeout: int = 90) -> int:
     """Stream a URL to disk; returns bytes written."""
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -370,27 +405,13 @@ def download_video(meta: dict, dest_dir: Path, settings: dict,
     if not info:
         raise DownloadError("yt-dlp 未返回任何媒体信息")
 
-    path = None
-    requested = info.get("requested_downloads") or []
-    if requested and requested[0].get("filepath"):
-        path = Path(requested[0]["filepath"])
-    if path is None or not path.exists():
-        try:
-            path = Path(info.get("_filename") or "")
-        except Exception:  # noqa: BLE001
-            path = None
-    if path is None or not path.exists():
-        candidates = sorted(
-            p for p in dest_dir.glob("video.*")
-            if p.suffix.lower() not in (".json", ".jpg", ".webp")
-        )
-        path = candidates[0] if candidates else None
-    if path is None or not path.exists():
+    path = _pick_downloaded_file(info, dest_dir)
+    if path is None:
         raise DownloadError("下载完成但未找到媒体文件")
 
     return {
         "kind": "video",
-        "path": str(path.relative_to(MEDIA_DIR)),
+        "path": _media_relative(path),
         "mime": "video/mp4" if path.suffix.lower() == ".mp4" else "video/*",
         "width": info.get("width"),
         "height": info.get("height"),
@@ -429,7 +450,7 @@ def download_photos(meta: dict, dest_dir: Path, limit: int = 8) -> tuple[list[di
             continue
         saved.append({
             "kind": "image",
-            "path": str(dest.relative_to(MEDIA_DIR)),
+            "path": _media_relative(dest),
             "mime": "image/png" if ext == ".png" else "image/jpeg",
             "width": item.get("width"),
             "height": item.get("height"),
@@ -449,4 +470,4 @@ def download_poster(meta: dict, dest_dir: Path) -> str | None:
         fetch_to_file(poster, dest)
     except Exception:  # noqa: BLE001
         return None
-    return str(dest.relative_to(MEDIA_DIR))
+    return _media_relative(dest)
