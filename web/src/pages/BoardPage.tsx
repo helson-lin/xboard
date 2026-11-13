@@ -1,5 +1,6 @@
 import { AlertTriangle, Inbox } from 'lucide-react'
 
+import { MasonryGrid } from '@/components/board/MasonryGrid'
 import { PostCard } from '@/components/board/PostCard'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -36,7 +37,7 @@ export function BoardPage({
       ) : null}
 
       {loading && posts.length === 0 ? (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {SKELETONS.map((i) => (
             <Skeleton key={i} className="h-72 rounded-xl" />
           ))}
@@ -54,14 +55,8 @@ export function BoardPage({
             添加推文
           </Button>
         </div>
-      ) : (
-        <div
-          className={
-            view === 'grid'
-              ? 'w-full columns-[20rem] gap-4'
-              : 'flex flex-col gap-3'
-          }
-        >
+      ) : view === 'grid' ? (
+        <MasonryGrid>
           {posts.map((post) => (
             <PostCard
               key={post.id}
@@ -69,11 +64,19 @@ export function BoardPage({
               onOpen={onOpen}
               onDelete={onDelete}
               tagColor={tagColor}
-              className={
-                view === 'grid'
-                  ? 'mb-4 max-w-full break-inside-avoid-column'
-                  : undefined
-              }
+              className="max-w-full"
+            />
+          ))}
+        </MasonryGrid>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              onOpen={onOpen}
+              onDelete={onDelete}
+              tagColor={tagColor}
             />
           ))}
         </div>
