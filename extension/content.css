@@ -1,0 +1,110 @@
+/* 注入到 X/Twitter 推文操作栏的保存按钮 */
+
+.xb-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.xb-save-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34.75px;
+  height: 34.75px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: rgb(113, 118, 123);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.xb-save-btn svg {
+  width: 18.75px;
+  height: 18.75px;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.xb-save-btn:hover {
+  color: rgb(0, 186, 124);
+  background: rgba(0, 186, 124, 0.1);
+}
+
+.xb-save-btn:active {
+  transform: scale(0.92);
+}
+
+.xb-save-btn:focus-visible {
+  outline: 2px solid rgb(0, 186, 124);
+  outline-offset: 2px;
+}
+
+.xb-save-btn[data-state="loading"] {
+  color: rgb(29, 155, 240);
+  cursor: progress;
+}
+
+.xb-save-btn[data-state="loading"] svg {
+  animation: xb-spin 0.9s linear infinite;
+}
+
+.xb-save-btn[data-state="done"] {
+  color: rgb(0, 186, 124);
+}
+
+.xb-save-btn[data-state="error"] {
+  color: rgb(244, 33, 46);
+}
+
+@keyframes xb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xb-save-btn,
+  .xb-save-btn svg {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* 页面内提示条 */
+.xb-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483647;
+  max-width: 320px;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font: 500 13px/1.5 ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+  color: #e9eef6;
+  background: #10161f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 34px rgb(0 0 0 / 45%);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.xb-toast[data-show="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.xb-toast[data-kind="ok"] {
+  border-color: rgba(0, 186, 124, 0.45);
+}
+
+.xb-toast[data-kind="error"] {
+  border-color: rgba(244, 33, 46, 0.45);
+}

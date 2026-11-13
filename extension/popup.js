@@ -1,77 +1,60 @@
-const STATUS_URL = /^https?:\/\/(?:www\.)?(?:x\.com|twitter\.com)\/[^/]+\/status\/\d+/i
-
 const serverInput = document.querySelector('#server-url')
 const tokenInput = document.querySelector('#api-token')
-const urlsInput = document.querySelector('#urls')
 const status = document.querySelector('#status')
-const submitButton = document.querySelector('#submit')
+const saveButton = document.querySelector('#save-config')
+const testButton = document.querySelector('#test')
 
 function setStatus(message, kind = '') {
   status.textContent = message
   status.className = kind
 }
 
-function parseUrls() {
-  return urlsInput.value
-    .split(/[\s,]+/)
-    .map((value) => value.trim())
-    .filter((value) => STATUS_URL.test(value))
+function normalizeServer(value) {
+  return String(value || '').trim().replace(/\/+$/, '')
 }
 
 async function saveConfig() {
-  const serverUrl = serverInput.value.trim().replace(/\/+$/, '')
+  const serverUrl = normalizeServer(serverInput.value)
   const apiToken = tokenInput.value.trim()
+  if (!serverUrl || !apiToken) {
+    setStatus('地址和 Token 都要填', 'error')
+    return false
+  }
   await chrome.storage.sync.set({ serverUrl, apiToken })
-  setStatus('配置已保存', 'success')
+  setStatus('已保存，刷新 X 页面后生效', 'success')
+  return true
 }
 
-async function useCurrentPage() {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-  if (tab?.url && STATUS_URL.test(tab.url)) {
-    urlsInput.value = tab.url
-    setStatus('已识别当前推文', 'success')
-  } else {
-    setStatus('当前页面不是 X 推文详情页', 'error')
-  }
-}
-
-document.querySelector('#save-config').addEventListener('click', () => {
-  void saveConfig()
-})
-
-document.querySelector('#use-current').addEventListener('click', () => {
-  void useCurrentPage()
-})
-
-submitButton.addEventListener('click', async () => {
-  const urls = parseUrls()
-  if (!serverInput.value.trim() || !tokenInput.value.trim()) {
-    setStatus('请先填写并保存服务器地址和 API Token', 'error')
+async function testConnection() {
+  const serverUrl = normalizeServer(serverInput.value)
+  const apiToken = tokenInput.value.trim()
+  if (!serverUrl || !apiToken) {
+    setStatus('先填好地址和 Token', 'error')
     return
   }
-  if (!urls.length) {
-    setStatus('请提供至少一个有效的 X 推文链接', 'error')
-    return
-  }
-
-  submitButton.disabled = true
-  setStatus('正在提交…')
+  testButton.disabled = true
+  setStatus('正在连接…')
   try {
+    const response = await fetch(`${serverUrl}/api/jobs?limit=1`, {
+      headers: { Authorization: `Bearer ${apiToken}` },
+    })
+    if (response.status === 401) throw new Error('Token 无效或已轮换')
+    if (!response.ok) throw new Error(`服务器返回 ${response.status}`)
+    setStatus('连接正常', 'success')
     await saveConfig()
-    const response = await chrome.runtime.sendMessage({ type: 'submit-urls', urls })
-    if (!response?.ok) throw new Error(response?.error || '提交失败')
-    setStatus(`已加入 ${response.result.queued} 条任务`, 'success')
-    urlsInput.value = ''
   } catch (error) {
-    setStatus(error.message || '提交失败', 'error')
+    setStatus(error.message || '连接失败', 'error')
   } finally {
-    submitButton.disabled = false
+    testButton.disabled = false
   }
-})
+}
+
+saveButton.addEventListener('click', () => void saveConfig())
+testButton.addEventListener('click', () => void testConnection())
 
 document.addEventListener('DOMContentLoaded', async () => {
   const config = await chrome.storage.sync.get(['serverUrl', 'apiToken'])
   serverInput.value = config.serverUrl || 'http://127.0.0.1:8765'
   tokenInput.value = config.apiToken || ''
-  await useCurrentPage()
+  if (!config.apiToken) setStatus('填好地址和 Token 后保存', '')
 })

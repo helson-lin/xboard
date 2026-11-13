@@ -1,15 +1,23 @@
 {
   "manifest_version": 3,
   "name": "XBoard Saver",
-  "version": "1.0.0",
-  "description": "从 X/Twitter 页面一键保存推文到自己的 XBoard。",
-  "permissions": ["storage", "tabs", "contextMenus"],
+  "version": "1.1.0",
+  "description": "在 X/Twitter 推文上点一下，直接加入自己的 XBoard 下载队列。",
+  "permissions": ["storage", "contextMenus"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "保存到 XBoard",
+    "default_title": "XBoard 设置",
     "default_popup": "popup.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
 }

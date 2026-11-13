@@ -12,7 +12,7 @@
         <div class="logo">X</div>
         <div>
           <h1>XBoard Saver</h1>
-          <p>保存 X 推文到自己的看板</p>
+          <p>推文上点图标即可保存</p>
         </div>
       </header>
 
@@ -22,18 +22,17 @@
       <label for="api-token">API Token</label>
       <input id="api-token" type="password" placeholder="xb_..." />
 
-      <div class="section-title">
-        <label for="urls">推文链接</label>
-        <button id="use-current" class="text-button" type="button">使用当前页面</button>
-      </div>
-      <textarea id="urls" rows="5" placeholder="每行一个 X 推文链接"></textarea>
-
       <p id="status" role="status" aria-live="polite"></p>
 
       <div class="actions">
-        <button id="save-config" class="secondary" type="button">保存配置</button>
-        <button id="submit" class="primary" type="button">加入下载队列</button>
+        <button id="test" class="secondary" type="button">测试连接</button>
+        <button id="save-config" class="primary" type="button">保存</button>
       </div>
+
+      <p class="hint">
+        配置好后刷新 X 页面：每条推文的转发 / 点赞那一行末尾会多一个归档图标，
+        点它直接把链接推进下载队列。
+      </p>
     </main>
     <script src="popup.js"></script>
   </body>
